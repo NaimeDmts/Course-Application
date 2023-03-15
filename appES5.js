@@ -34,6 +34,20 @@ UI.prototype.deleteCourse = function(element){
     }
 }
 
+UI.prototype.showAlert = function(message, className){
+    var alert = `
+        <div class="alert alert-${className}">
+            ${message}
+        </div>
+    `
+    const row = document.querySelector('.row');
+    row.insertAdjacentHTML("beforebegin", alert);
+
+    setTimeout(()=>{
+        document.querySelector('.alert').remove();
+    },3000);
+}
+
 document.getElementById('new-course').addEventListener('submit', function(e){
 
     const title = document.getElementById('title').value;
@@ -46,14 +60,24 @@ document.getElementById('new-course').addEventListener('submit', function(e){
     // creat UI
     const ui = new UI();
 
-    //add course to list
-    ui.addCourseToList(course);
+    if(title == '' || instructor == '' || image ==''){
+        ui.showAlert('please complate the form', 'warning');
+    }
+    else{
+        //add course to list
+        ui.addCourseToList(course);
 
-    //clear controls
-    ui.clearControls();
+        //clear controls
+        ui.clearControls();
+
+        ui.showAlert('the course has been added', 'success');
+    }
+
     e.preventDefault();
-})
+});
+
 document.getElementById('course-list').addEventListener('click', function(e){
     const ui = new UI();
     ui.deleteCourse(e.target);
-})
+    ui.showAlert('the course has been delete', 'danger');
+});
