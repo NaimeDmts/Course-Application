@@ -49,6 +49,41 @@ class UI{
     }
 }
 
+class Storage {
+    static getCourses(){
+        let courses;
+
+        if(localStorage.getItem('courses') === null){
+            courses = [];
+        }
+        else{
+            courses = JSON.parse(localStorage.getItem('courses'));
+        }
+        return courses;
+    }
+    static displayCourses(){
+        const courses = Storage.getCourses();
+
+        courses.forEach(course=> {
+            const ui = new UI();
+            ui.addCourseToList(course);
+        });
+
+    }
+    static addCourse(course){
+        const courses = Storage.getCourses();
+        courses.push(course);
+        localStorage.setItem('courses',JSON.stringify(courses));
+
+    }
+    static deleteCourse(course){
+
+    }
+
+}
+
+document.addEventListener('DOMContentLoaded', Storage.displayCourses);
+
 document.getElementById('new-course').addEventListener('submit', function(e){
 
     const title = document.getElementById('title').value;
@@ -67,6 +102,9 @@ document.getElementById('new-course').addEventListener('submit', function(e){
     else{
         //add course to list
         ui.addCourseToList(course);
+
+        // save to LS
+        Storage.addCourse(course);
 
         //clear controls
         ui.clearControls();
